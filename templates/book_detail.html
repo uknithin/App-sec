@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}{{ book['title'] }}{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row g-5 align-items-start">
+    <div class="col-md-4"><img class="img-fluid rounded shadow" src="{{ url_for('static', filename='images/books/' + book['image']) }}" alt="{{ book['title'] }}"></div>
+    <div class="col-md-8">
+      <span class="badge text-bg-dark mb-2">{{ book['category'] }}</span>
+      <h1 class="fw-bold">{{ book['title'] }}</h1>
+      <p class="text-muted">By {{ book['author'] }}</p>
+      <h3>€{{ '%.2f'|format(book['price']) }}</h3>
+      <p class="lead">{{ book['description'] }}</p>
+      <p>Stock available: <strong>{{ book['stock'] }}</strong></p>
+      <form method="post" action="{{ url_for('add_to_cart', book_id=book['id']) }}" class="d-flex gap-2">
+        <input type="number" name="quantity" min="1" max="10" value="1" class="form-control" style="max-width:100px">
+        <button class="btn btn-warning btn-lg">Add to Cart</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Checkout{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 align-items-lg-center mb-4">
+    <div>
+      <h1 class="fw-bold mb-1">Checkout</h1>
+      <p class="text-muted mb-0">Demo focus: server-side validation blocks price/quantity tampering.</p>
+    </div>
+    <a class="btn btn-outline-dark" href="{{ url_for('security_plan') }}">View Vulnerability Mapping</a>
+  </div>
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <div class="card p-4 shadow-sm h-100">
+        <h4>Shipping Details</h4>
+        <input class="form-control mb-3" placeholder="Full name">
+        <input class="form-control mb-3" placeholder="Address">
+        <input class="form-control mb-3" placeholder="City / Postcode">
+        <div class="alert alert-info mb-0">
+          <strong>Payment-data protection:</strong> this is demo/tokenised payment only. The application does not collect or store real PAN/CVV card details.
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="card p-4 shadow-sm">
+        <h4>Order Summary</h4>
+        {% for book, qty in items %}
+          <div class="d-flex justify-content-between"><span>{{ book['title'] }} × {{ qty }}</span><span>€{{ '%.2f'|format(book['price'] * qty) }}</span></div>
+        {% endfor %}
+        <hr><h4 class="d-flex justify-content-between"><span>Server Total</span><span>€{{ '%.2f'|format(total) }}</span></h4>
+        <form method="post">
+          <input type="hidden" name="client_total" value="{{ '%.2f'|format(total) }}">
+          <button class="btn btn-warning w-100 btn-lg mt-3">Place Demo Order</button>
+        </form>
+        <div class="small text-muted mt-3">
+          Demo evidence: if someone changes <code>client_total</code> in browser DevTools or Burp, the server recalculates the total from the database, blocks mismatches, and logs <code>CHECKOUT_TAMPER_BLOCKED</code>.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

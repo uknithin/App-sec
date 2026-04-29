@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block title %}Top 3 Vulnerability Mapping{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="mb-4">
+    <p class="text-uppercase text-muted fw-semibold mb-1">CA3 SSDLC Demo</p>
+    <h1 class="fw-bold">Top 3 High-Impact Vulnerability Mapping</h1>
+    <p class="lead mb-0">Use this page in the presentation. It keeps the vulnerability model short, practical, and easy to defend.</p>
+  </div>
+
+  <div class="row g-4 mb-5">
+    <div class="col-lg-4">
+      <div class="card h-100 border-danger shadow-sm">
+        <div class="card-body">
+          <span class="badge text-bg-danger mb-2">1. Account Takeover</span>
+          <h3 class="h5 fw-bold">Credential Stuffing / Brute Force</h3>
+          <p>Attackers repeatedly try leaked or common passwords against customer or admin accounts.</p>
+          <ul class="small">
+            <li><strong>Feature:</strong> Login</li>
+            <li><strong>STRIDE:</strong> Spoofing</li>
+            <li><strong>ASVS:</strong> V2 Authentication / Credential Security</li>
+            <li><strong>Impact:</strong> stolen accounts, order history exposure, admin compromise</li>
+            <li><strong>Mitigation:</strong> password hashing, failed-attempt tracking, account lockout after 5 failures, audit logging</li>
+          </ul>
+          <a class="btn btn-sm btn-outline-danger" href="{{ url_for('login') }}">Demo Login</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card h-100 border-warning shadow-sm">
+        <div class="card-body">
+          <span class="badge text-bg-warning mb-2">2. Payment Fraud</span>
+          <h3 class="h5 fw-bold">Checkout Price / Quantity Tampering</h3>
+          <p>Attackers manipulate request values to reduce the payable amount or buy more stock than allowed.</p>
+          <ul class="small">
+            <li><strong>Feature:</strong> Cart and Checkout</li>
+            <li><strong>STRIDE:</strong> Tampering</li>
+            <li><strong>ASVS:</strong> V5 Validation / Business Logic Security</li>
+            <li><strong>Impact:</strong> revenue loss, fraudulent orders, stock integrity issues</li>
+            <li><strong>Mitigation:</strong> server recalculates total from database, rejects client-total mismatches, logs tampering attempts</li>
+          </ul>
+          <a class="btn btn-sm btn-outline-warning" href="{{ url_for('cart') }}">Demo Checkout</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card h-100 border-dark shadow-sm">
+        <div class="card-body">
+          <span class="badge text-bg-dark mb-2">3. Admin Compromise</span>
+          <h3 class="h5 fw-bold">Unauthorised Admin Access / Privilege Escalation</h3>
+          <p>Normal users or unauthenticated attackers attempt to access admin CRUD functions.</p>
+          <ul class="small">
+            <li><strong>Feature:</strong> Admin Dashboard and Book CRUD</li>
+            <li><strong>STRIDE:</strong> Elevation of Privilege</li>
+            <li><strong>ASVS:</strong> V4 Access Control</li>
+            <li><strong>Impact:</strong> product manipulation, order exposure, business disruption</li>
+            <li><strong>Mitigation:</strong> admin-only route decorator, role checks, 403 blocking, audit logs for blocked access and CRUD actions</li>
+          </ul>
+          <a class="btn btn-sm btn-outline-dark" href="{{ url_for('admin_dashboard') }}">Try Admin Page</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="h4 fw-bold">Presentation Mapping Table</h2>
+  <div class="table-responsive mb-4">
+    <table class="table table-bordered align-middle">
+      <thead class="table-dark"><tr><th>Vulnerability</th><th>STRIDE</th><th>OWASP ASVS Area</th><th>Risk</th><th>Implemented Mitigation</th><th>Evidence to Show</th></tr></thead>
+      <tbody>
+        <tr><td>Credential stuffing / brute force</td><td>Spoofing</td><td>V2 Authentication</td><td>High</td><td>Password hashing, lockout after 5 failed attempts, audit logs</td><td>Login failures + admin audit log</td></tr>
+        <tr><td>Checkout price/quantity tampering</td><td>Tampering</td><td>V5 Validation / Business Logic</td><td>Critical</td><td>Server-side total recalculation and mismatch blocking</td><td>Checkout page + tamper-blocked audit log</td></tr>
+        <tr><td>Unauthorised admin access</td><td>Elevation of Privilege</td><td>V4 Access Control</td><td>Critical</td><td>Role-based admin protection and 403 denial</td><td>Open /admin without admin login + audit log</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="alert alert-secondary">
+    <strong>30-second explanation:</strong> We selected the three highest-impact risks: account takeover, checkout fraud, and admin privilege escalation. STRIDE classifies the threats, OWASP ASVS gives the control areas, and the implemented evidence is visible through login tests, checkout tamper blocking, protected admin routes, and audit logs.
+  </div>
+</div>
+{% endblock %}

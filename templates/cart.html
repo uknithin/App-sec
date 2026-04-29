@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Cart{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <h1 class="fw-bold mb-4">Shopping Cart</h1>
+  {% if rows %}
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead><tr><th>Book</th><th>Qty</th><th>Unit</th><th>Total</th><th></th></tr></thead>
+      <tbody>
+      {% for row in rows %}
+        <tr>
+          <td>{{ row.book['title'] }}</td><td>{{ row.quantity }}</td><td>€{{ '%.2f'|format(row.book['price']) }}</td><td>€{{ '%.2f'|format(row.line_total) }}</td>
+          <td><form method="post" action="{{ url_for('remove_from_cart', book_id=row.book['id']) }}"><button class="btn btn-sm btn-outline-danger">Remove</button></form></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="text-end"><h3>Total: €{{ '%.2f'|format(total) }}</h3><a class="btn btn-warning btn-lg" href="{{ url_for('checkout') }}">Checkout</a></div>
+  {% else %}<p>Your cart is empty.</p><a class="btn btn-dark" href="{{ url_for('books') }}">Browse Books</a>{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Books | A-Z Books{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row">
+    <aside class="col-lg-3 mb-4">
+      <div class="card p-3 shadow-sm">
+        <h5>Filters</h5>
+        <form method="get">
+          <label class="form-label mt-2">Search</label>
+          <input name="q" value="{{ q }}" class="form-control" placeholder="Title, author, keyword">
+          <label class="form-label mt-3">Category</label>
+          <select name="category" class="form-select">
+            <option value="">All categories</option>
+            {% for c in categories %}<option value="{{ c['category'] }}" {% if category == c['category'] %}selected{% endif %}>{{ c['category'] }}</option>{% endfor %}
+          </select>
+          <button class="btn btn-dark w-100 mt-3">Apply</button>
+        </form>
+      </div>
+    </aside>
+    <section class="col-lg-9">
+      <h1 class="fw-bold mb-4">Book Catalogue</h1>
+      <div class="row g-4">
+        {% for book in books %}
+          <div class="col-sm-6 col-xl-4">
+            <div class="card book-card h-100">
+              <img src="{{ url_for('static', filename='images/books/' + book['image']) }}" class="card-img-top" alt="{{ book['title'] }}">
+              <div class="card-body d-flex flex-column">
+                <h5>{{ book['title'] }}</h5>
+                <p class="small text-muted">{{ book['author'] }} · {{ book['category'] }}</p>
+                <p>{{ book['description'][:90] }}...</p>
+                <div class="mt-auto d-flex justify-content-between align-items-center">
+                  <strong>€{{ '%.2f'|format(book['price']) }}</strong>
+                  <a href="{{ url_for('book_detail', book_id=book['id']) }}" class="btn btn-sm btn-dark">Details</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% else %}
+          <p>No books found.</p>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %}

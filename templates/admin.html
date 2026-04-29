@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-4"><h1 class="fw-bold">Admin Dashboard</h1><a class="btn btn-warning" href="{{ url_for('admin_book_new') }}">Add Book</a></div>
+  <h3>Book CRUD</h3>
+  <div class="table-responsive mb-5"><table class="table table-striped"><thead><tr><th>Title</th><th>Category</th><th>Price</th><th>Stock</th><th>Actions</th></tr></thead><tbody>
+  {% for book in books %}<tr><td>{{ book['title'] }}</td><td>{{ book['category'] }}</td><td>€{{ '%.2f'|format(book['price']) }}</td><td>{{ book['stock'] }}</td><td><a class="btn btn-sm btn-outline-dark" href="{{ url_for('admin_book_edit', book_id=book['id']) }}">Edit</a> <form class="d-inline" method="post" action="{{ url_for('admin_book_delete', book_id=book['id']) }}"><button class="btn btn-sm btn-outline-danger">Delete</button></form></td></tr>{% endfor %}
+  </tbody></table></div>
+  <div class="row g-4">
+    <div class="col-lg-6"><h3>Recent Orders</h3><table class="table"><thead><tr><th>ID</th><th>User</th><th>Total</th><th>Status</th></tr></thead><tbody>{% for o in orders %}<tr><td>#{{ o['id'] }}</td><td>{{ o['username'] }}</td><td>€{{ '%.2f'|format(o['total']) }}</td><td>{{ o['status'] }}</td></tr>{% endfor %}</tbody></table></div>
+    <div class="col-lg-6"><h3>Audit Logs</h3><table class="table"><thead><tr><th>Action</th><th>Details</th><th>Time</th></tr></thead><tbody>{% for l in logs %}<tr><td>{{ l['action'] }}</td><td>{{ l['details'] }}</td><td>{{ l['created_at'][:19] }}</td></tr>{% endfor %}</tbody></table></div>
+  </div>
+</div>
+{% endblock %}

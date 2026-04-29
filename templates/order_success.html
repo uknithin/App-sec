@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Order Confirmed{% endblock %}
+{% block content %}
+<div class="container py-5 text-center">
+  <div class="card p-5 shadow-sm">
+    <h1 class="fw-bold text-success">Order Confirmed</h1>
+    <p class="lead">Order #{{ order['id'] }} was created successfully.</p>
+    <p>Total paid by demo payment: <strong>€{{ '%.2f'|format(order['total']) }}</strong></p>
+    <a href="{{ url_for('books') }}" class="btn btn-dark">Continue Shopping</a>
+  </div>
+</div>
+{% endblock %}
