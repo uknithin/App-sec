@@ -261,14 +261,46 @@ def cart():
 
 @app.route("/cart/add/<int:book_id>", methods=["POST"])
 def add_to_cart(book_id):
-    book = get_db().execute("SELECT * FROM books WHERE id = ?", (book_id,)).fetchone()
+    db = get_db()
+    book = db.execute("SELECT * FROM books WHERE id = ?", (book_id,)).fetchone()
     if not book:
         abort(404)
-    qty = max(1, min(int(request.form.get("quantity", 1)), 10))
+
+    raw_qty = request.form.get("quantity", "1")
+
+    try:
+        qty = int(raw_qty)
+    except ValueError:
+        log_action("CART_TAMPER_BLOCKED", f"book_id={book_id}, invalid_quantity={raw_qty}")
+        flash("Invalid quantity detected and blocked.", "danger")
+        return redirect(url_for("book_detail", book_id=book_id))
+
     cart_data = session.get("cart", {})
     key = str(book_id)
-    cart_data[key] = cart_data.get(key, 0) + qty
+    current_qty = int(cart_data.get(key, 0))
+    new_qty = current_qty + qty
+
+    # Server-side quantity validation
+    if qty < 1 or qty > 5:
+        log_action(
+            "CART_TAMPER_BLOCKED",
+            f"book_id={book_id}, submitted_quantity={qty}, allowed_range=1-5"
+        )
+        flash("Quantity tampering detected and blocked.", "danger")
+        return redirect(url_for("book_detail", book_id=book_id))
+
+    # Server-side stock validation
+    if new_qty > book["stock"]:
+        log_action(
+            "CART_TAMPER_BLOCKED",
+            f"book_id={book_id}, submitted_total_quantity={new_qty}, available_stock={book['stock']}"
+        )
+        flash("Requested quantity exceeds available stock.", "danger")
+        return redirect(url_for("book_detail", book_id=book_id))
+
+    cart_data[key] = new_qty
     session["cart"] = cart_data
+
     flash(f"Added {book['title']} to cart.", "success")
     return redirect(url_for("cart"))
 
