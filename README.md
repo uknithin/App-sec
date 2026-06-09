@@ -18,8 +18,8 @@ Open: http://127.0.0.1:5000
 
 ## Demo Admin
 
-- Username: `admin_nithin`
-- Password: `ChangeMe@12345`
+- Username: `admin`
+- Password: `ChangeMe`
 
 ## Presentation Focus: Top 3 High-Impact Vulnerabilities
 
